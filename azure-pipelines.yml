@@ -1,1 +1,62 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - checkout: self
+
+  - script: |
+      cd deploy/docker
+      docker compose pull
+      docker compose -f docker-compose.yml --compatibility up -d
+      docker compose ps
+    displayName: "Start crAPI"
+
+  - script: |
+      for i in {1..60}; do
+        if curl -sSf http://localhost:8888 >/dev/null; then
+          echo "crAPI is up"
+          exit 0
+        fi
+        echo "Waiting for crAPI..."
+        sleep 5
+      done
+      echo "crAPI did not start in time"
+      exit 1
+    displayName: "Wait for crAPI"
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.11'
+    displayName: "Use Python 3.11"
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install robotframework robotframework-requests
+      mkdir -p reports
+      BASE_URL=http://localhost:8888 robot -d reports --xunit reports/xunit.xml tests
+    displayName: "Run Robot Tests"
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'reports/xunit.xml'
+      failTaskOnFailedTests: true
+    condition: always()
+    displayName: "Publish Test Results (xUnit)"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'reports'
+      ArtifactName: 'robot-reports'
+    condition: always()
+    displayName: "Publish Robot Reports (HTML)"
+
+  - script: |
+      cd deploy/docker
+      docker compose -f docker-compose.yml down -v || true
+    condition: always()
+    displayName: "Stop crAPI"
 
