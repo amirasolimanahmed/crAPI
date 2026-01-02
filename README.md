@@ -165,3 +165,27 @@ To know more about challenges in crAPI. Visit [challenges]
 If you need any help with installing and running crAPI you can check out this guide: [Troubleshooting guide crAPI](https://github.com/OWASP/crAPI/blob/main/docs/troubleshooting.md). If this doesn't solve your problem, please create an issue in Github Issues.
 
 
+
+# GITHUB ACTION
+
+Big picture: what this workflow does
+
+When GitHub runs this workflow, it will:
+
+Download your repo code onto a fresh runner machine
+
+Start crAPI using Docker Compose
+
+Wait until crAPI is reachable
+
+Install Python + Robot Framework
+
+Run your Robot tests against http://localhost:8888
+
+Upload the reports (report.html, log.html, output.xml) as artifacts
+
+Stop crAPI and cleanup even if tests fail
+
+So it’s basically the same steps you do locally, but on a clean CI machine.
+
+
