@@ -1,0 +1,65 @@
+name: API Security Robot Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  robot-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start crAPI
+        working-directory: deploy/docker
+        run: |
+          docker compose pull
+          docker compose -f docker-compose.yml --compatibility up -d
+          docker compose ps
+
+      - name: Wait for crAPI to be ready
+        run: |
+          for i in {1..60}; do
+            if curl -sSf http://localhost:8888 >/dev/null; then
+              echo "crAPI is up"
+              exit 0
+            fi
+            echo "Waiting for crAPI..."
+            sleep 5
+          done
+          echo "crAPI did not start in time"
+          exit 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Robot Framework
+        run: |
+          python -m pip install --upgrade pip
+          pip install robotframework robotframework-requests
+
+      - name: Run Robot tests
+        env:
+          BASE_URL: "http://localhost:8888"
+        run: |
+          mkdir -p reports
+          robot -d reports tests
+
+      - name: Upload Robot reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-reports
+          path: reports/
+
+      - name: Stop crAPI
+        if: always()
+        working-directory: deploy/docker
+        run: |
+          docker compose -f docker-compose.yml down -v
