@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.3.2 (Python 3.13.9 on linux)" generated="2026-01-02T13:26:48.922128" rpa="false" schemaversion="5">
+<suite id="s1" name="Tests" source="/opt/robotframework/project/tests">
+<suite id="s1-s1" name="Auth Login" source="/opt/robotframework/project/tests/auth_login.robot">
+<test id="s1-s1-t1" name="Login With Invalid Password Should Return 401" line="8">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-01-02T13:26:48.983328" level="INFO">Creating Session using : alias=api, url=http://localhost:8888, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${BASE_URL}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-01-02T13:26:48.983056" elapsed="0.000380"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-01-02T13:26:48.983650" level="INFO">${payload} = {'email': 'test@test.com', 'password': 'wrong'}</msg>
+<var>${payload}</var>
+<arg>email=test@test.com</arg>
+<arg>password=wrong</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-01-02T13:26:48.983509" elapsed="0.000152"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-01-02T13:26:48.985257" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0xffffbbdfaf90&gt;: Failed to establish a new connection: [Errno 111] Connection refused')': /identity/api/auth/login</msg>
+<msg time="2026-01-02T13:26:49.188118" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0xffffbbb71090&gt;: Failed to establish a new connection: [Errno 111] Connection refused')': /identity/api/auth/login</msg>
+<msg time="2026-01-02T13:26:49.595094" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0xffffbbb71310&gt;: Failed to establish a new connection: [Errno 111] Connection refused')': /identity/api/auth/login</msg>
+<msg time="2026-01-02T13:26:49.599469" level="FAIL">ConnectionError: HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: /identity/api/auth/login (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0xffffbbb69220&gt;: Failed to establish a new connection: [Errno 111] Connection refused'))</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/identity/api/auth/login</arg>
+<arg>json=${payload}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="FAIL" start="2026-01-02T13:26:48.983701" elapsed="0.629260">ConnectionError: HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: /identity/api/auth/login (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0xffffbbb69220&gt;: Failed to establish a new connection: [Errno 111] Connection refused'))</status>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<arg>${resp.status_code}</arg>
+<arg>401</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="NOT RUN" start="2026-01-02T13:26:49.613878" elapsed="0.000067"/>
+</kw>
+<status status="FAIL" start="2026-01-02T13:26:48.982044" elapsed="0.632690">ConnectionError: HTTPConnectionPool(host='localhost', port=8888): Max retries exceeded with url: /identity/api/auth/login (Caused by NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0xffffbbb69220&gt;: Failed to establish a new connection: [Errno 111] Connection refused'))</status>
+</test>
+<status status="FAIL" start="2026-01-02T13:26:48.934741" elapsed="0.680771"/>
+</suite>
+<status status="FAIL" start="2026-01-02T13:26:48.923290" elapsed="0.692623"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Tests" id="s1" pass="0" fail="1" skip="0">Tests</stat>
+<stat name="Auth Login" id="s1-s1" pass="0" fail="1" skip="0">Tests.Auth Login</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-01-02T13:26:48.985257" level="WARN">Retrying (RetryAdapter(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0xffffbbdfaf90&gt;: Failed to establish a new connection: [Errno 111] Connection refused')': /identity/api/auth/login</msg>
+<msg time="2026-01-02T13:26:49.188118" level="WARN">Retrying (RetryAdapter(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0xffffbbb71090&gt;: Failed to establish a new connection: [Errno 111] Connection refused')': /identity/api/auth/login</msg>
+<msg time="2026-01-02T13:26:49.595094" level="WARN">Retrying (RetryAdapter(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPConnection object at 0xffffbbb71310&gt;: Failed to establish a new connection: [Errno 111] Connection refused')': /identity/api/auth/login</msg>
+</errors>
+</robot>
