@@ -1,4 +1,4 @@
-name: API Security Robot Tests
+name: API Security Robot Tests with GitHub Action
 
 on:
   workflow_dispatch:
