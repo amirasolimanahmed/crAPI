@@ -232,5 +232,16 @@ This cleans up the environment.
 
 `if: always()` means cleanup happens even if something earlier fails.
 
+---
+
+## What Next!
+
+### Common improvements (very practical)
+
+- Cache pip dependencies (faster runs)
+- Save docker logs on failure (super helpful)
+- Use a healthcheck from compose instead of only curl
+- Use requirements.txt for consistent versions
+- Pin Robot libs versions to avoid surprise upgrades
 
 
